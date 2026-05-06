@@ -1,0 +1,61 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  font:
+    16px/1.5 Georgia,
+    serif;
+  color: #111;
+  background: #fff;
+}
+
+.site-title a,
+a {
+  color: inherit;
+}
+
+.home-intro,
+.post-list {
+  margin-bottom: 2rem;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+pre,
+blockquote {
+  margin: 0 0 1rem;
+}
+
+.meta,
+.post-list span {
+  color: #666;
+}
+
+.post-list ul {
+  padding-left: 1.25rem;
+}
+
+pre,
+code {
+  font:
+    0.95em/1.4 "SFMono-Regular",
+    Menlo,
+    Consolas,
+    monospace;
+}
