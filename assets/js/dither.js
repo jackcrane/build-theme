@@ -1,5 +1,7 @@
 (function () {
   var DEFAULT_PIXEL_SIZE = 4;
+  var DEFAULT_MAX_DPR = 1.25;
+  var DEFAULT_TARGET_FPS = 24;
 
   var vertexShaderSource = [
     "attribute vec2 a_position;",
@@ -207,6 +209,12 @@
     return parts;
   }
 
+  function clampNumber(value, min, max, fallback) {
+    var parsed = parseNumber(value, fallback);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.min(max, Math.max(min, parsed));
+  }
+
   function compileShader(gl, type, source) {
     var shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -246,7 +254,13 @@
     this.element = element;
     this.canvas = element.querySelector(".post-title__canvas");
     this.frameId = 0;
+    this.lastRenderTime = 0;
     this.startTime = performance.now();
+    this.isVisible = true;
+    this.isInViewport = true;
+    this.prefersReducedMotion = window.matchMedia
+      ? window.matchMedia("(prefers-reduced-motion: reduce)")
+      : null;
     this.options = {
       waveColor: parseColor(element.dataset.waveColor, [0.5, 0.5, 0.5]),
       disableAnimation: parseBoolean(element.dataset.disableAnimation, false),
@@ -254,15 +268,21 @@
       pixelSize: parseNumber(element.dataset.pixelSize, DEFAULT_PIXEL_SIZE),
       waveAmplitude: parseNumber(element.dataset.waveAmplitude, 0.3),
       waveFrequency: parseNumber(element.dataset.waveFrequency, 3),
-      waveSpeed: parseNumber(element.dataset.waveSpeed, 0.05)
+      waveSpeed: parseNumber(element.dataset.waveSpeed, 0.05),
+      maxDpr: clampNumber(element.dataset.maxDpr, 1, 2, DEFAULT_MAX_DPR),
+      targetFps: clampNumber(element.dataset.targetFps, 1, 60, DEFAULT_TARGET_FPS)
     };
 
     try {
       this.gl = this.canvas.getContext("webgl", {
         alpha: true,
-        antialias: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        desynchronized: true,
         premultipliedAlpha: true,
-        preserveDrawingBuffer: false
+        preserveDrawingBuffer: false,
+        powerPreference: "low-power"
       });
     } catch (error) {
       this.gl = null;
@@ -301,18 +321,77 @@
     );
 
     this.handleResize = this.resize.bind(this);
+    this.handleVisibilityChange = this.updateVisibility.bind(this);
+    this.handleMotionPreferenceChange = this.handleMotionChange.bind(this);
+    this.render = this.render.bind(this);
 
     window.addEventListener("resize", this.handleResize);
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+
+    if (this.prefersReducedMotion) {
+      if (this.prefersReducedMotion.addEventListener) {
+        this.prefersReducedMotion.addEventListener("change", this.handleMotionPreferenceChange);
+      } else if (this.prefersReducedMotion.addListener) {
+        this.prefersReducedMotion.addListener(this.handleMotionPreferenceChange);
+      }
+    }
 
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(this.handleResize);
       this.resizeObserver.observe(this.element);
     }
 
+    if (window.IntersectionObserver) {
+      this.intersectionObserver = new IntersectionObserver(
+        this.handleIntersection.bind(this),
+        { threshold: 0 }
+      );
+      this.intersectionObserver.observe(this.element);
+    }
+
     this.resize();
-    this.render = this.render.bind(this);
-    this.frameId = window.requestAnimationFrame(this.render);
+    this.updateAnimationState();
   }
+
+  DitherHeader.prototype.shouldAnimate = function () {
+    return (
+      !this.options.disableAnimation &&
+      !(this.prefersReducedMotion && this.prefersReducedMotion.matches) &&
+      this.isVisible &&
+      this.isInViewport
+    );
+  };
+
+  DitherHeader.prototype.handleIntersection = function (entries) {
+    if (!entries || !entries.length) {
+      return;
+    }
+
+    this.isInViewport = entries[0].isIntersecting;
+    this.updateAnimationState();
+  };
+
+  DitherHeader.prototype.updateVisibility = function () {
+    this.isVisible = !document.hidden;
+    this.updateAnimationState();
+  };
+
+  DitherHeader.prototype.handleMotionChange = function () {
+    this.updateAnimationState();
+  };
+
+  DitherHeader.prototype.updateAnimationState = function () {
+    window.cancelAnimationFrame(this.frameId);
+    this.frameId = 0;
+
+    if (this.shouldAnimate()) {
+      this.lastRenderTime = 0;
+      this.frameId = window.requestAnimationFrame(this.render);
+      return;
+    }
+
+    this.renderFrame();
+  };
 
   DitherHeader.prototype.resize = function () {
     if (!this.gl) {
@@ -320,7 +399,7 @@
     }
 
     var rect = this.element.getBoundingClientRect();
-    var dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+    var dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, this.options.maxDpr));
     var width = Math.max(1, Math.round(rect.width * dpr));
     var height = Math.max(1, Math.round(rect.height * dpr));
 
@@ -328,17 +407,19 @@
       this.canvas.width = width;
       this.canvas.height = height;
       this.gl.viewport(0, 0, width, height);
+      this.renderFrame();
     }
 
   };
 
-  DitherHeader.prototype.render = function (now) {
+  DitherHeader.prototype.renderFrame = function (now) {
     if (!this.gl) {
       return;
     }
 
     var gl = this.gl;
-    var elapsed = this.options.disableAnimation ? 0 : (now - this.startTime) / 1000;
+    var timestamp = typeof now === "number" ? now : this.startTime;
+    var elapsed = this.shouldAnimate() ? (timestamp - this.startTime) / 1000 : 0;
 
     gl.useProgram(this.program);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
@@ -361,6 +442,19 @@
     gl.uniform1f(this.uniforms.colorNum, this.options.colorNum);
     gl.uniform1f(this.uniforms.pixelSize, this.options.pixelSize);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+  };
+
+  DitherHeader.prototype.render = function (now) {
+    if (!this.shouldAnimate()) {
+      this.frameId = 0;
+      return;
+    }
+
+    var minFrameDuration = 1000 / this.options.targetFps;
+    if (!this.lastRenderTime || now - this.lastRenderTime >= minFrameDuration) {
+      this.lastRenderTime = now;
+      this.renderFrame(now);
+    }
 
     this.frameId = window.requestAnimationFrame(this.render);
   };
@@ -368,9 +462,22 @@
   DitherHeader.prototype.destroy = function () {
     window.cancelAnimationFrame(this.frameId);
     window.removeEventListener("resize", this.handleResize);
+    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
 
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
+    }
+
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+    }
+
+    if (this.prefersReducedMotion) {
+      if (this.prefersReducedMotion.removeEventListener) {
+        this.prefersReducedMotion.removeEventListener("change", this.handleMotionPreferenceChange);
+      } else if (this.prefersReducedMotion.removeListener) {
+        this.prefersReducedMotion.removeListener(this.handleMotionPreferenceChange);
+      }
     }
 
     if (!this.gl) {
