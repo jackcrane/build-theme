@@ -181,6 +181,8 @@ figure.highlight {
     Menlo,
     Consolas,
     monospace;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 code.highlighter-rouge {
@@ -188,6 +190,8 @@ code.highlighter-rouge {
   border-radius: 0.35rem;
   background: #f1f5f9;
   color: #b42318;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .highlight .hll {
