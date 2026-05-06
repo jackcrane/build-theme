@@ -100,31 +100,18 @@ module BuildTheme
     end
 
     def resolved_public_dir(site, document)
+      BuildTheme.ensure_collection_permalink!(site, document)
+
       url = document.data["permalink"].to_s.strip
       url = document.url.to_s if url.empty?
 
       if url.empty? || url.include?(":")
         base_path = BuildTheme.collection_url_prefix(site, document.collection.label)
-        slug = resolved_slug(document)
+        slug = BuildTheme.resolved_slug(document)
         url = File.join("/", base_path, "#{slug}/")
       end
 
       url.sub(%r{/*\z}, "")
-    end
-
-    def resolved_slug(document)
-      slug = document.data["slug"].to_s.strip
-      return slug unless slug.empty?
-
-      if document.respond_to?(:slug)
-        document_slug = document.slug.to_s.strip
-        return document_slug unless document_slug.empty?
-      end
-
-      title_slug = Jekyll::Utils.slugify(document.data["title"].to_s)
-      return title_slug unless title_slug.empty?
-
-      Jekyll::Utils.slugify(File.basename(File.dirname(document.path)))
     end
   end
 end
