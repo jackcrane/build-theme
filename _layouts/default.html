@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      {% if page.title %}{{ page.title }} | {{ site.title }}{% else %}{{
+      site.title }}{% endif %}
+    </title>
+    <meta
+      name="description"
+      content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | escape }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ '/assets/css/style.css' | relative_url }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="alternate"
+      type="application/atom+xml"
+      title="{{ site.title | escape }}"
+      href="{{ '/feed.xml' | relative_url }}"
+    />
+  </head>
+  <body class="layout-{{ page.layout | default: 'default' }}">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="header-content">
+          <div class="site-title">
+            <a href="{{ '/' | relative_url }}">
+              <img
+                src="{{ '/assets/images/logo-h.svg' | relative_url }}"
+                alt="Logo"
+                class="site-logo"
+              />
+              <img
+                src="{{ '/assets/images/logo-h.png' | relative_url }}"
+                alt="Logo"
+                class="site-logo site-logo-print"
+              />
+              <img
+                src="{{ '/assets/images/logo-v.svg' | relative_url }}"
+                alt="Logo"
+                class="site-logo-sm"
+              />
+              <img
+                src="{{ '/assets/images/logo-v.png' | relative_url }}"
+                alt="Logo"
+                class="site-logo-sm site-logo-sm-print"
+              />
+            </a>
+          </div>
+          <div class="site-header__actions">
+            <button
+              class="site-search-trigger"
+              type="button"
+              data-search-trigger
+              aria-haspopup="dialog"
+              aria-controls="site-search-modal"
+            >
+              Search...
+            </button>
+            <nav class="site-nav" aria-label="Primary">
+              <a href="{{ '/' | relative_url }}">Home</a>
+              {% assign nav_pages = site.pages | sort: "title" %} {% for
+              nav_page in nav_pages %} {% if nav_page.title and nav_page.url !=
+              "/" and nav_page.nav != false %}
+              <a
+                href="{% if nav_page.title == 'About' %}{{ '/resources/what-is-build-slu-oss/' | relative_url }}{% else %}{{ nav_page.url | relative_url }}{% endif %}"
+                >{{ nav_page.title }}</a
+              >
+              {% endif %} {% endfor %}
+            </nav>
+          </div>
+        </div>
+        <div
+          class="site-search"
+          data-site-search
+          data-search-url="{{ '/search.json' | relative_url }}"
+          data-base-url="{{ site.baseurl }}"
+          data-search-open="false"
+        >
+          <div class="site-search__backdrop" data-search-close hidden></div>
+          <div
+            class="site-search__modal"
+            id="site-search-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Search the site"
+            hidden
+          >
+            <input
+              id="site-search-input"
+              class="site-search__input"
+              type="search"
+              name="q"
+              placeholder="Search anything"
+              autocomplete="off"
+              spellcheck="false"
+              aria-describedby="site-search-status"
+            />
+            <p
+              class="site-search__status"
+              id="site-search-status"
+              data-search-status
+              hidden
+            ></p>
+            <div
+              class="site-search__results"
+              data-search-results
+              hidden
+              aria-live="polite"
+            ></div>
+          </div>
+        </div>
+      </header>
+
+      <main class="site-main">{{ content }}</main>
+
+      <footer class="site-footer">
+        <p>
+          Peer-reviewed white papers about technical adventures, sideprojects,
+          deep dives, and more.
+        </p>
+        <p><a href="mailto:oss@slu.edu">oss@slu.edu</a></p>
+      </footer>
+    </div>
+    <script src="{{ '/assets/js/code-copy.js' | relative_url }}"></script>
+    <script
+      defer
+      src="https://unpkg.com/lunr@2.3.9/lunr.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+      crossorigin="anonymous"
+      onload="
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '\\[', right: '\\]', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+          ],
+          ignoredTags: [
+            'script',
+            'noscript',
+            'style',
+            'textarea',
+            'pre',
+            'code',
+            'option',
+          ],
+          throwOnError: false,
+        })
+      "
+    ></script>
+    <script
+      type="module"
+      src="{{ '/assets/js/plot-render.js' | relative_url }}"
+    ></script>
+    <script defer src="{{ '/assets/js/search.js' | relative_url }}"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        securityLevel: "loose",
+        themeVariables: {
+          background: "#ffffff",
+          primaryColor: "#ffffff",
+          primaryTextColor: "#111111",
+          primaryBorderColor: "#666666",
+          lineColor: "#666666",
+          secondaryColor: "#ffffff",
+          tertiaryColor: "#ffffff",
+          clusterBkg: "#ffffff",
+          clusterBorder: "#dddddd",
+          mainBkg: "#ffffff",
+          nodeBorder: "#666666",
+          edgeLabelBackground: "#ffffff",
+          fontFamily: "Georgia, serif",
+          fontSize: "16px",
+        },
+        flowchart: {
+          curve: "basis",
+        },
+      });
+    </script>
+  </body>
+</html>

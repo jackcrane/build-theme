@@ -1,0 +1,233 @@
+---
+layout: default
+---
+
+{% assign header_effect = page.header_effect | downcase %} {% assign authors =
+site.data.AUTHORS.authors | default: empty %} {% assign author = authors |
+where: "name", page.author | first %} {% assign rendered_content = content |
+decorate_citations %}
+<article class="page-content">
+  {% if header_effect == 'dither' %}
+  <header
+    class="post-hero post-hero--dither"
+    data-dither-header
+    data-wave-color="0.5,0.5,0.5"
+    data-disable-animation="false"
+    data-color-num="4"
+    data-wave-amplitude="0.3"
+    data-wave-frequency="3"
+    data-wave-speed="0.05"
+  >
+    <canvas class="post-title__canvas" aria-hidden="true"></canvas>
+    <div class="post-hero__inner">
+      <h1 class="post-title post-title__label">{{ page.title }}</h1>
+      <div class="post-meta">
+        <p class="meta post-meta__date">{{ page.date | date: "%Y-%m-%d" }}</p>
+        {% if author %}
+        <div class="author-profile">
+          <button
+            type="button"
+            class="author-profile__summary"
+            aria-label="Author details for {{ author.name }}"
+          >
+            <img
+              class="author-profile__image"
+              src="{{ author.image | relative_url }}"
+              alt="{{ author.name }}"
+            />
+            <span class="author-profile__name">{{ author.name }}</span>
+          </button>
+          <div class="author-profile__card">
+            <img
+              class="author-profile__card-image"
+              src="{{ author.image | relative_url }}"
+              alt="{{ author.name }}"
+            />
+            <div class="author-profile__card-copy">
+              <p class="author-profile__card-name">{{ author.name }}</p>
+              {% if author.year %}
+              <p class="author-profile__card-year">{{ author.year }}</p>
+              {% endif %}
+              <div
+                class="author-profile__socials"
+                aria-label="Author social links"
+              >
+                {% if author.social.github %}
+                <a
+                  href="https://github.com/{{ author.social.github }}"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="{{ author.name }} on GitHub"
+                >
+                  <img
+                    src="https://cdn.simpleicons.org/github/111111"
+                    alt="GitHub"
+                  />
+                </a>
+                {% endif %} {% if author.social.x %}
+                <a
+                  href="https://x.com/{{ author.social.x | remove: '@' }}"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="{{ author.name }} on X"
+                >
+                  <img src="https://cdn.simpleicons.org/x/111111" alt="X" />
+                </a>
+                {% endif %} {% if author.social.linkedin %}
+                <a
+                  href="https://www.linkedin.com/in/{{ author.social.linkedin }}"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="{{ author.name }} on LinkedIn"
+                >
+                  <img
+                    src="{{ '/assets/images/linkedin.svg' | relative_url }}"
+                    alt="LinkedIn"
+                  />
+                </a>
+                {% endif %} {% if author.social.email %}
+                <a
+                  href="mailto:{{ author.social.email }}"
+                  aria-label="Email {{ author.name }}"
+                >
+                  <img
+                    src="{{ '/assets/images/email.svg' | relative_url }}"
+                    alt="Email"
+                  />
+                </a>
+                {% endif %} {% if author.social.website %}
+                <a
+                  href="{{ author.social.website }}"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="{{ author.name }} website"
+                >
+                  <img
+                    src="{{ '/assets/images/website.svg' | relative_url }}"
+                    alt="Website"
+                  />
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  <script defer src="{{ '/assets/js/dither.js' | relative_url }}"></script>
+  {% else %}
+  <h1 class="post-title">{{ page.title }}</h1>
+  <div class="post-meta">
+    <p class="meta post-meta__date">{{ page.date | date: "%Y-%m-%d" }}</p>
+    {% if author %}
+    <div class="author-profile">
+      <button
+        type="button"
+        class="author-profile__summary"
+        aria-label="Author details for {{ author.name }}"
+      >
+        <img
+          class="author-profile__image"
+          src="{{ author.image | relative_url }}"
+          alt="{{ author.name }}"
+        />
+        <span class="author-profile__name">{{ author.name }}</span>
+      </button>
+      <div class="author-profile__card">
+        <img
+          class="author-profile__card-image"
+          src="{{ author.image | relative_url }}"
+          alt="{{ author.name }}"
+        />
+        <div class="author-profile__card-copy">
+          <p class="author-profile__card-name">{{ author.name }}</p>
+          {% if author.year %}
+          <p class="author-profile__card-year">{{ author.year }}</p>
+          {% endif %}
+          <div class="author-profile__socials" aria-label="Author social links">
+            {% if author.social.github %}
+            <a
+              href="https://github.com/{{ author.social.github }}"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="{{ author.name }} on GitHub"
+            >
+              <img
+                src="https://cdn.simpleicons.org/github/111111"
+                alt="GitHub"
+              />
+            </a>
+            {% endif %} {% if author.social.x %}
+            <a
+              href="https://x.com/{{ author.social.x | remove: '@' }}"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="{{ author.name }} on X"
+            >
+              <img src="https://cdn.simpleicons.org/x/111111" alt="X" />
+            </a>
+            {% endif %} {% if author.social.linkedin %}
+            <a
+              href="https://www.linkedin.com/in/{{ author.social.linkedin }}"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="{{ author.name }} on LinkedIn"
+            >
+              <img
+                src="{{ '/assets/images/linkedin.svg' | relative_url }}"
+                alt="LinkedIn"
+              />
+            </a>
+            {% endif %} {% if author.social.email %}
+            <a
+              href="mailto:{{ author.social.email }}"
+              aria-label="Email {{ author.name }}"
+            >
+              <img
+                src="{{ '/assets/images/email.svg' | relative_url }}"
+                alt="Email"
+              />
+            </a>
+            {% endif %} {% if author.social.website %}
+            <a
+              href="{{ author.social.website }}"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="{{ author.name }} website"
+            >
+              <img
+                src="{{ '/assets/images/website.svg' | relative_url }}"
+                alt="Website"
+              />
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="content-container">
+    <div class="post-content">
+      {% if page.toc %}
+      <div class="post-content__toc-sticky">
+        <nav
+          class="post-content__toc"
+          aria-label="Table of Contents"
+          data-scrollspy-toc
+        >
+          <div class="post-content__toc-title">Table of Contents</div>
+          {{ rendered_content | toc_only }}
+        </nav>
+      </div>
+      {{ rendered_content | inject_anchors }} {% else %} {{ rendered_content }}
+      {% endif %}
+    </div>
+  </div>
+</article>
+{% if page.toc %}
+<script defer src="{{ '/assets/js/toc-scrollspy.js' | relative_url }}"></script>
+{% endif %}
