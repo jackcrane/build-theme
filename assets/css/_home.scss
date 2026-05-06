@@ -117,13 +117,17 @@
 }
 
 .hero--dither .hero-content h1,
+.hero--letters .hero-content h1,
 .hero--dither .hero-copy,
-.hero--dither .hero-cta {
+.hero--letters .hero-copy,
+.hero--dither .hero-cta,
+.hero--letters .hero-cta {
   color: #111;
   text-shadow: none;
 }
 
-.hero--dither .hero-cta {
+.hero--dither .hero-cta,
+.hero--letters .hero-cta {
   border-color: #111;
   background: rgba(255, 255, 255, 0.7);
 }

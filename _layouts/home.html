@@ -10,8 +10,13 @@ layout: default
 {% assign hero_text = page.hero_text | default: site.description %}
 {% assign hero_image = page.hero_image %}
 {% assign hero_image_key = hero_image | downcase %}
-{% assign hero_is_dither = hero_image_key == 'dither' %}
-{% assign hero_is_letters = hero_image_key == 'letters' %}
+{% assign hero_is_dither = false %}
+{% assign hero_is_letters = false %}
+{% if hero_image_key == 'dither' %}
+  {% assign hero_is_dither = true %}
+{% elsif hero_image_key == 'letters' %}
+  {% assign hero_is_letters = true %}
+{% endif %}
 {% assign hero_cta_text = page.hero_cta_text %}
 {% assign hero_cta_url = page.hero_cta_url %}
 {% assign list_title = page.list_title | default: 'Latest Writing' %}
