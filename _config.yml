@@ -1,6 +1,15 @@
 title: build-theme
-description: Reusable Jekyll remote theme for long-form writing and documentation.
+description: Reusable Jekyll theme gem for long-form writing and documentation.
+
+plugins:
+  - build-theme
 
 exclude:
   - README.md
   - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - build-theme.gemspec
+  - build-theme-*.gem
+  - lib
+  - _plugins

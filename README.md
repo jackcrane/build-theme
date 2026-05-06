@@ -1,8 +1,8 @@
 # build-theme
 
-`build-theme` is a reusable Jekyll theme for publication-heavy sites, notes, essays, and documentation.
+`build-theme` is a reusable Jekyll theme gem for publication-heavy sites, notes, essays, and documentation.
 
-This repository is theme-first. It does not ship site content, but it now includes optional Jekyll plugins that mirror the content behavior used by `../build` for date-less, nested writing collections with colocated assets.
+This repository packages both the presentation layer and the content-discovery plugin behavior used by `../build`, including date-less nested writing collections with colocated assets.
 
 ## What This Repo Contains
 
@@ -17,8 +17,6 @@ This repository is theme-first. It does not ship site content, but it now includ
 - Brand assets such as your logo, hero art, and author headshots
 - `_data/` files such as author metadata
 
-One important caveat: Jekyll remote themes do not run custom plugins from the theme repository. If you consume this via `remote_theme`, copy the plugin files from this repo into the consumer site's `_plugins/` directory.
-
 ## Install It
 
 In your site’s `_config.yml`:
@@ -28,10 +26,10 @@ title: My Site
 description: Essays, notes, and writeups.
 url: https://example.com
 
-remote_theme: jackcrane/build-theme
+theme: build-theme
 
 plugins:
-  - jekyll-remote-theme
+  - build-theme
   - jekyll-feed
   - jekyll-toc
 ```
@@ -39,13 +37,12 @@ plugins:
 In your site’s `Gemfile`:
 
 ```ruby
-gem "jekyll", "~> 4.4.1"
+source "https://rubygems.org"
 
-group :jekyll_plugins do
-  gem "jekyll-feed", "~> 0.12"
-  gem "jekyll-remote-theme", ">= 0.4.2"
-  gem "jekyll-toc"
-end
+gem "jekyll", "~> 4.4.1"
+gem "build-theme", git: "https://github.com/jackcrane/build-theme.git", branch: "main"
+gem "jekyll-feed", "~> 0.12"
+gem "jekyll-toc"
 
 gem "webrick", "~> 1.9"
 ```
@@ -57,16 +54,7 @@ bundle install
 bundle exec jekyll serve --livereload
 ```
 
-`jekyll-remote-theme` `0.4.1` has a known compatibility bug that can raise
-`undefined method 'configure_sass'` during startup. Use `0.4.2` or newer.
-
-If you want a pinned version instead of following `main`, use:
-
-```yml
-remote_theme: jackcrane/build-theme@v1.0.0
-```
-
-You can also pin to a branch or commit SHA.
+When you cut a release tag later, replace `branch: "main"` with `tag: "v1.0.0"` or whatever version you publish. Once this gem is published to RubyGems, the `Gemfile` entry can become a plain versioned gem dependency.
 
 ## Layouts
 
@@ -155,6 +143,8 @@ _articles/fluid-number-classification/data/vectors.json
 ```
 
 That article will publish at `/posts/fluid-number-classification/`, and its assets will publish under the same path, such as `/posts/fluid-number-classification/hero.png`.
+
+Important: this workflow uses a real collection such as `_articles/`, not nested files under `_posts/`. Jekyll's built-in `_posts` rules still expect dated filenames.
 
 ## Theme Configuration
 
@@ -250,7 +240,7 @@ The theme also accepts the older `_data/AUTHORS.yml` shape with a top-level `aut
 
 The theme can render a search modal, but it does not generate `search.json` for you.
 
-If you enable search, your site must expose a JSON index at the configured URL. Because remote themes cannot execute theme-side plugins, search index generation still has to live in the consumer repo.
+If you enable search, your site must expose a JSON index at the configured URL. This gem does not generate `search.json` for you yet, so search index generation still has to live in the consumer repo.
 
 ### Math, Mermaid, And Plots
 
@@ -267,23 +257,22 @@ Those features do not require custom theme-side plugins.
 This repo is not meant to be the content site. The normal workflow is:
 
 1. Edit this theme repo.
-2. Push your changes.
-3. In a separate Jekyll site, point `remote_theme` at this repo, branch, tag, or commit.
-4. If you need the collection plugins while using `remote_theme`, copy this repo's `_plugins/` files into the consumer site.
-5. Run `bundle exec jekyll clean && bundle exec jekyll serve --livereload` in the consumer site.
+2. Bump the version in [`lib/build_theme/version.rb`](./lib/build_theme/version.rb) when you are ready to release.
+3. In a separate Jekyll site, depend on this repo as the `build-theme` gem.
+4. Run `bundle exec jekyll clean && bundle exec jekyll serve --livereload` in the consumer site.
 
 Example:
 
-```yml
-remote_theme: jackcrane/build-theme@my-branch
+```ruby
+gem "build-theme", git: "https://github.com/jackcrane/build-theme.git", branch: "my-branch"
 ```
 
 ## Publishing Notes
 
-- Public GitHub repos work best for `remote_theme`
-- If you use a private theme repo, your CI build needs credentials for the fetch
+- Until this is published to RubyGems, consumer sites should install it from GitHub in their `Gemfile`
+- If you use a private repo, your CI build needs credentials for the fetch
 - Theme `_config.yml` values are not merged into the consuming site, so document required settings in the consumer repo
-- Theme `_plugins/` values are not executed by `remote_theme`, so plugin-based behavior must be vendored into the consuming site
+- Consumers should set both `theme: build-theme` and `plugins: [build-theme]` so the layouts and collection plugin behavior are both active
 
 ## License
 

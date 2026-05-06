@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
-gem "jekyll", "~> 4.4.1"
+gemspec
+
 gem "webrick", "~> 1.9"
 
 platforms :mingw, :x64_mingw, :mswin, :jruby do
