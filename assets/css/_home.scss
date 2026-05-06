@@ -28,6 +28,9 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
+  overflow: hidden;
+  border-bottom: 1.5px solid #eee;
+  background: #111;
 }
 
 .hero-content {
@@ -51,6 +54,8 @@
   color: white;
   text-shadow: 0 0 2rem rgba(0, 0, 0, 0.45);
   font-size: 1.1rem;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-cta {
@@ -63,6 +68,8 @@
   text-decoration: none;
   background: rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 2;
 }
 
 .hero-cta:hover,
@@ -75,7 +82,6 @@
   height: auto;
   padding: 4rem 1rem 2rem;
   background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
-  border-bottom: 1.5px solid #eee;
 }
 
 .hero--plain .hero-content h1,
@@ -98,6 +104,77 @@
   object-fit: cover;
   user-select: none;
   pointer-events: none;
+}
+
+.hero-pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero--dither {
+  background: #f7f7f7;
+}
+
+.hero--dither .hero-content h1,
+.hero--dither .hero-copy,
+.hero--dither .hero-cta {
+  color: #111;
+  text-shadow: none;
+}
+
+.hero--dither .hero-cta {
+  border-color: #111;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.hero--letters {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.28), transparent 32%),
+    linear-gradient(135deg, #111 0%, #1f1f1f 48%, #090909 100%);
+}
+
+.hero-pattern--letters::before,
+.hero-pattern--letters::after {
+  position: absolute;
+  inset: 0;
+  display: block;
+  white-space: pre-wrap;
+  overflow: hidden;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  content:
+    "A B C D E F G H I J K L M N O P\n"
+    "Q R S T U V W X Y Z A B C D E F\n"
+    "G H I J K L M N O P Q R S T U V\n"
+    "W X Y Z A B C D E F G H I J K L\n"
+    "M N O P Q R S T U V W X Y Z A B\n"
+    "C D E F G H I J K L M N O P Q R\n"
+    "S T U V W X Y Z A B C D E F G H";
+}
+
+.hero-pattern--letters::before {
+  padding: 1.5rem 1rem;
+  color: rgba(255, 255, 255, 0.13);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  line-height: 1.5;
+}
+
+.hero-pattern--letters::after {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 2.75rem 2.75rem;
+  mix-blend-mode: screen;
+}
+
+@media screen and (max-width: 640px) {
+  .hero-pattern--letters::before {
+    letter-spacing: 0.2em;
+    line-height: 1.4;
+  }
 }
 
 .container {

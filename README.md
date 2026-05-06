@@ -44,7 +44,7 @@ gem "jekyll", "~> 4.4.1"
 
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.12"
-  gem "jekyll-remote-theme"
+  gem "jekyll-remote-theme", ">= 0.4.2"
   gem "jekyll-toc"
 end
 
@@ -57,6 +57,9 @@ Then install and run:
 bundle install
 bundle exec jekyll serve --livereload
 ```
+
+`jekyll-remote-theme` `0.4.1` has a known compatibility bug that can raise
+`undefined method 'configure_sass'` during startup. Use `0.4.2` or newer.
 
 If you want a pinned version instead of following `main`, use:
 
@@ -176,6 +179,7 @@ list_title: Latest Writing
 ```
 
 If `hero_image` is omitted, the homepage renders a text-first hero.
+If `hero_image` is set to `dither` or `letters`, the homepage renders that built-in pattern instead of loading an image path.
 
 ## Author Metadata
 

@@ -9,13 +9,31 @@ layout: default
 {% assign hero_title = page.hero_title | default: page.title | default: site.title %}
 {% assign hero_text = page.hero_text | default: site.description %}
 {% assign hero_image = page.hero_image %}
+{% assign hero_image_key = hero_image | downcase %}
+{% assign hero_is_dither = hero_image_key == 'dither' %}
+{% assign hero_is_letters = hero_image_key == 'letters' %}
 {% assign hero_cta_text = page.hero_cta_text %}
 {% assign hero_cta_url = page.hero_cta_url %}
 {% assign list_title = page.list_title | default: 'Latest Writing' %}
 
 <div class="container">
-  <section class="hero{% unless hero_image %} hero--plain{% endunless %}">
-    {% if hero_image %}
+  <section
+    class="hero{% if hero_is_dither %} hero--dither{% elsif hero_is_letters %} hero--letters{% elsif hero_image %} hero--image{% else %} hero--plain{% endif %}"
+    {% if hero_is_dither %}
+    data-dither-header
+    data-wave-color="0.5,0.5,0.5"
+    data-disable-animation="false"
+    data-color-num="4"
+    data-wave-amplitude="0.3"
+    data-wave-frequency="3"
+    data-wave-speed="0.05"
+    {% endif %}
+  >
+    {% if hero_is_dither %}
+    <canvas class="post-title__canvas hero-pattern__canvas" aria-hidden="true"></canvas>
+    {% elsif hero_is_letters %}
+    <div class="hero-pattern hero-pattern--letters" aria-hidden="true"></div>
+    {% elsif hero_image %}
     <img
       src="{{ hero_image | relative_url }}"
       alt="{{ hero_title }}"
@@ -34,6 +52,9 @@ layout: default
       {% endif %}
     </div>
   </section>
+  {% if hero_is_dither %}
+  <script defer src="{{ '/assets/js/dither.js' | relative_url }}"></script>
+  {% endif %}
 
   {% assign page_content = content | strip %}
   {% if page_content != "" %}
