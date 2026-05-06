@@ -1,0 +1,113 @@
+---
+layout: default
+---
+
+<div class="container">
+  <div class="hero">
+    <img
+      src="{{ '/assets/images/banner-crop.png' | relative_url }}"
+      alt="An image of SLU"
+      class="hero-image"
+    />
+    <div class="hero-content">
+      <h1>Reviewed student papers</h1>
+    </div>
+  </div>
+  <section class="section">
+    <p>
+      <strong>The mission of Build@SLU OSS is</strong> to provide a place for
+      students to publish their work in an environment with a strong reputation
+      for high standards and rigor, while providing the community an insight
+      into the high quality work and conversations being cultivated in the SLU
+      OSS program.
+      <a href="{{ '/resources/what-is-build-slu-oss/' | relative_url }}">
+        Learn more about Build@SLU OSS here</a
+      >.
+    </p>
+  </section>
+  <section class="section section-publications">
+    <div class="section-label-vertical">Recent Publications</div>
+    <div class="publications">
+      {% assign publications = site.articles | sort: "date" | reverse %} {% for
+      publication in publications %} {% assign preview_text =
+      publication.abstract | default: publication.excerpt | default:
+      publication.content %}
+      <article class="pub">
+        <div class="pub__meta">
+          {% if publication.author %}
+          <p class="pub__authors">{{ publication.author }}</p>
+          {% endif %}
+          <p class="pub__date">{{ publication.date | date: "%B %-d, %Y" }}</p>
+        </div>
+        <h2 class="pub__title">
+          <a href="{{ publication.url | relative_url }}">
+            {{ publication.title }}
+          </a>
+        </h2>
+        <hr class="pub__rule" />
+        <p class="pub__preview">
+          {{ preview_text | strip_html | normalize_whitespace | truncatewords:
+          24 }}
+        </p>
+        <a class="pub__link" href="{{ publication.url | relative_url }}">
+          Read More
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="section">
+    <strong>How can you submit work?</strong> Members of the SLU OSS community
+    are encouraged to submit their work to Build@SLU OSS. While we enforce our
+    quality standards, we do so in an open, transparent, and accessible manner.
+    <ol class="timeline">
+      <li>
+        <strong>Submit a proposal</strong> of your work. This can be done by
+        submitting an issue to the Build@SLU OSS GitHub repository with the tag
+        "Proposal". Adherant to the issue template, you will include a one-line
+        description (what will likely become your title), a draft abstract, and
+        any information on the project you would like to share.
+        <i
+          >The proposal process is not designed to block projects, but to ensure
+          your work will match our standards. If it does not, the reviewers will
+          provide suggestions on how you can improve your work so it more ready
+          for submission.
+        </i>
+      </li>
+      <li>
+        <strong>Write a draft</strong> of your publication. This is to be
+        submitted in the form of a pull request to the Build@SLU OSS GitHub
+        repository. Be sure to mention the proposal issue in the pull request.
+        Include any graphics, data, code samples, or other supporting materials
+        you intend to include in your publication.
+      </li>
+      <li>
+        <strong>Peer reviews</strong> of your work. This is done by other
+        members of the community. Anything involving your work is fair game for
+        review. Reviewers are encouraged to provide constructive feedback
+        regarding your problem, solution, implementation, and documentation.
+        This is an iterative process, and you are encouraged to revise your work
+        based on the feedback you receive. If you feel you have received
+        feedback that you believe is not a progression to your work, you are
+        encouraged to defend your work <i>by clarifying in your publication</i>.
+      </li>
+      <li>
+        <strong>Professor/Expert Reviews</strong> of your work. This is mostly
+        focused on semantics; ensuring your work is clear, your verbiage is
+        professional, your citations are correct, and your writing is something
+        Build@SLU OSS is ready to put it's name behind.
+      </li>
+      <li>
+        <strong>Release</strong>. Once the PR is approved and merged, your work
+        will immediately become available on the Build@SLU OSS website.
+      </li>
+    </ol>
+    <br />
+    When submitting work, please be sure to adhere to the Build@SLU OSS policies
+    and guidelines. Refer to the
+    <a href="resources/writing-guide/">writing guide</a> for documentation on
+    using the rich text features of Build@SLU OSS. Always remember to be
+    respectful and follow the rules outlined in the
+    <a href="resources/codes-of-conduct/">Codes of Conduct</a>.
+  </section>
+</div>
