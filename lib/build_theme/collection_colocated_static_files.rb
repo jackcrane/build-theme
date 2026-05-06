@@ -80,7 +80,9 @@ module BuildTheme
     end
 
     def add_static_files_for_document(site, document)
-      document_dir = File.dirname(document.path)
+      document_dir = asset_root_for_document(document)
+      return if document_dir.nil?
+
       public_dir = resolved_public_dir(site, document)
 
       Dir.glob(File.join(document_dir, "**", "*"), File::FNM_DOTMATCH).sort.each do |source_path|
@@ -97,6 +99,16 @@ module BuildTheme
 
     def markdown_file?(source_path)
       MARKDOWN_EXTENSIONS.include?(File.extname(source_path).downcase)
+    end
+
+    def asset_root_for_document(document)
+      basename = File.basename(document.path, File.extname(document.path))
+      return File.dirname(document.path) if basename.casecmp("index").zero?
+
+      sibling_dir = File.join(File.dirname(document.path), basename)
+      return sibling_dir if Dir.exist?(sibling_dir)
+
+      nil
     end
 
     def resolved_public_dir(site, document)

@@ -47,22 +47,25 @@ module BuildTheme
   end
 
   def self.resolved_slug(document)
-    explicit_slug = document.data["slug"].to_s.strip
-    return explicit_slug unless explicit_slug.empty?
-
+    basename = File.basename(document.path, File.extname(document.path))
+    basename_slug = Jekyll::Utils.slugify(basename)
+    data_slug = document.data["slug"].to_s.strip
     title_slug = Jekyll::Utils.slugify(document.data["title"].to_s)
+
+    if !data_slug.empty? && data_slug != basename_slug && !data_slug.casecmp("index").zero?
+      return data_slug
+    end
+
     return title_slug unless title_slug.empty?
 
-    basename = File.basename(document.path, File.extname(document.path))
     if basename.casecmp("index").zero?
       dirname_slug = Jekyll::Utils.slugify(File.basename(File.dirname(document.path)))
       return dirname_slug unless dirname_slug.empty?
     end
 
-    document_slug = document.respond_to?(:slug) ? document.slug.to_s.strip : ""
-    return document_slug unless document_slug.empty? || document_slug.casecmp("index").zero?
+    return data_slug unless data_slug.empty? || data_slug.casecmp("index").zero?
 
-    Jekyll::Utils.slugify(basename)
+    basename_slug
   end
 
   def self.normalize_labels(value)
