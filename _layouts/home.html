@@ -17,8 +17,6 @@ layout: default
 {% elsif hero_image_key == 'letters' %}
   {% assign hero_is_letters = true %}
 {% endif %}
-{% assign hero_cta_text = page.hero_cta_text %}
-{% assign hero_cta_url = page.hero_cta_url %}
 {% assign list_title = page.list_title | default: 'Latest Writing' %}
 
 <div class="container">
@@ -49,11 +47,6 @@ layout: default
       <h1>{{ hero_title }}</h1>
       {% if hero_text %}
       <p class="hero-copy">{{ hero_text }}</p>
-      {% endif %}
-      {% if hero_cta_text and hero_cta_url %}
-      <a class="hero-cta" href="{{ hero_cta_url | relative_url }}">
-        {{ hero_cta_text }}
-      </a>
       {% endif %}
     </div>
   </section>

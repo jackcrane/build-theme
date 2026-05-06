@@ -173,8 +173,6 @@ title: Home
 hero_title: Practical writing for curious builders
 hero_text: Essays, reference material, and project notes.
 hero_image: /assets/images/hero.jpg
-hero_cta_text: Read the latest
-hero_cta_url: /posts/
 home_collection: posts
 list_title: Latest Writing
 ---
