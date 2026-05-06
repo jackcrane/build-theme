@@ -48,6 +48,24 @@ group :jekyll_plugins do
 end
 ```
 
+If the consumer site wants header logos, define their paths in `_config.yml`:
+
+```yaml
+logo_horizontal_svg: /assets/images/logo-h.svg
+logo_horizontal_png: /assets/images/logo-h.png
+logo_vertical_svg: /assets/images/logo-v.svg
+logo_vertical_png: /assets/images/logo-v.png
+```
+
+If those values are omitted, the theme falls back to rendering `site.title`.
+
+## Compatibility Notes
+
+- `layout: post` no longer requires a custom citation-decoration filter from the
+  consumer site. Posts render as normal even if you have no custom plugins.
+- Table of contents support still depends on `jekyll-toc` when you use
+  `page.toc: true`.
+
 ## Local Development
 
 Theme changes are previewed from the consumer site, not from this repository by

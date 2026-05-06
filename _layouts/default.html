@@ -28,31 +28,47 @@
     />
   </head>
   <body class="layout-{{ page.layout | default: 'default' }}">
+    {% assign logo_horizontal_svg = site.logo_horizontal_svg %}
+    {% assign logo_horizontal_png = site.logo_horizontal_png %}
+    {% assign logo_vertical_svg = site.logo_vertical_svg %}
+    {% assign logo_vertical_png = site.logo_vertical_png %}
     <div class="site-shell">
       <header class="site-header">
         <div class="header-content">
           <div class="site-title">
             <a href="{{ '/' | relative_url }}">
+              {% if logo_horizontal_svg or logo_horizontal_png or logo_vertical_svg or logo_vertical_png %}
+              {% if logo_horizontal_svg %}
               <img
-                src="{{ '/assets/images/logo-h.svg' | relative_url }}"
+                src="{{ logo_horizontal_svg | relative_url }}"
                 alt="Logo"
                 class="site-logo"
               />
+              {% endif %}
+              {% if logo_horizontal_png %}
               <img
-                src="{{ '/assets/images/logo-h.png' | relative_url }}"
+                src="{{ logo_horizontal_png | relative_url }}"
                 alt="Logo"
                 class="site-logo site-logo-print"
               />
+              {% endif %}
+              {% if logo_vertical_svg %}
               <img
-                src="{{ '/assets/images/logo-v.svg' | relative_url }}"
+                src="{{ logo_vertical_svg | relative_url }}"
                 alt="Logo"
                 class="site-logo-sm"
               />
+              {% endif %}
+              {% if logo_vertical_png %}
               <img
-                src="{{ '/assets/images/logo-v.png' | relative_url }}"
+                src="{{ logo_vertical_png | relative_url }}"
                 alt="Logo"
                 class="site-logo-sm site-logo-sm-print"
               />
+              {% endif %}
+              {% else %}
+              <span>{{ site.title }}</span>
+              {% endif %}
             </a>
           </div>
           <div class="site-header__actions">

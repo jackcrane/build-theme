@@ -4,8 +4,7 @@ layout: default
 
 {% assign header_effect = page.header_effect | downcase %} {% assign authors =
 site.data.AUTHORS.authors | default: empty %} {% assign author = authors |
-where: "name", page.author | first %} {% assign rendered_content = content |
-decorate_citations %}
+where: "name", page.author | first %} {% assign rendered_content = content %}
 <article class="page-content">
   {% if header_effect == 'dither' %}
   <header
