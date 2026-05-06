@@ -136,6 +136,7 @@ build_theme:
   logo_mobile: /assets/images/logo-mobile.svg
   footer_text: Thoughtful writing about building things.
   footer_email: hello@example.com
+  version: 0.0.4
   home_collection: posts
   nav:
     - title: About
@@ -153,6 +154,7 @@ build_theme:
 - `build_theme.logo_mobile`: optional small-screen logo image
 - `build_theme.footer_text`: footer copy
 - `build_theme.footer_email`: footer email link
+- `build_theme.version`: footer version string, defaults to `0.0.4`
 - `build_theme.home_collection`: collection shown by the `home` layout, default `posts`
 - `build_theme.nav`: explicit nav items; if omitted, titled pages are auto-listed
 - `build_theme.search.enabled`: enables the search modal trigger and JS
