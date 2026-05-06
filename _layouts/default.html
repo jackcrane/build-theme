@@ -28,16 +28,15 @@
     />
   </head>
   <body class="layout-{{ page.layout | default: 'default' }}">
-    {% assign theme = site.build_theme | default: empty %}
-    {% assign logo = theme.logo | default: site.logo %}
-    {% assign logo_mobile = theme.logo_mobile | default: logo %}
-    {% assign footer_text = theme.footer_text | default: site.description %}
-    {% assign footer_email = theme.footer_email | default: site.email %}
-    {% assign theme_version = theme.version | default: '0.0.4' %}
-    {% assign nav_items = theme.nav | default: site.nav %}
-    {% assign search_settings = theme.search | default: empty %}
-    {% assign search_enabled = search_settings.enabled | default: false %}
-    {% assign search_url = search_settings.url | default: '/search.json' %}
+    {% assign theme = site.build_theme | default: empty %} {% assign logo =
+    theme.logo | default: site.logo %} {% assign logo_mobile = theme.logo_mobile
+    | default: logo %} {% assign footer_text = theme.footer_text | default:
+    site.description %} {% assign footer_email = theme.footer_email | default:
+    site.email %} {% assign theme_version = theme.version | default: '0.0.5' %}
+    {% assign nav_items = theme.nav | default: site.nav %} {% assign
+    search_settings = theme.search | default: empty %} {% assign search_enabled
+    = search_settings.enabled | default: false %} {% assign search_url =
+    search_settings.url | default: '/search.json' %}
     <div class="site-shell">
       <header class="site-header">
         <div class="header-content">
@@ -49,15 +48,13 @@
                 alt="{{ site.title }}"
                 class="site-logo"
               />
-              {% endif %}
-              {% if logo_mobile %}
+              {% endif %} {% if logo_mobile %}
               <img
                 src="{{ logo_mobile | relative_url }}"
                 alt="{{ site.title }}"
                 class="site-logo-sm"
               />
-              {% endif %}
-              {% unless logo or logo_mobile %}
+              {% endif %} {% unless logo or logo_mobile %}
               <span class="site-title__text">{{ site.title }}</span>
               {% endunless %}
             </a>
@@ -76,18 +73,16 @@
             {% endif %}
             <nav class="site-nav" aria-label="Primary">
               <a href="{{ '/' | relative_url }}">Home</a>
-              {% if nav_items and nav_items.size > 0 %}
-                {% for item in nav_items %}
+              {% if nav_items and nav_items.size > 0 %} {% for item in nav_items
+              %}
               <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
-                {% endfor %}
-              {% else %}
-                {% assign nav_pages = site.pages | sort: "title" %}
-                {% for nav_page in nav_pages %}
-                  {% if nav_page.title and nav_page.url != "/" and nav_page.nav != false %}
-              <a href="{{ nav_page.url | relative_url }}">{{ nav_page.title }}</a>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
+              {% endfor %} {% else %} {% assign nav_pages = site.pages | sort:
+              "title" %} {% for nav_page in nav_pages %} {% if nav_page.title
+              and nav_page.url != "/" and nav_page.nav != false %}
+              <a href="{{ nav_page.url | relative_url }}"
+                >{{ nav_page.title }}</a
+              >
+              {% endif %} {% endfor %} {% endif %}
             </nav>
           </div>
         </div>
@@ -140,11 +135,9 @@
       <footer class="site-footer">
         {% if footer_text %}
         <p>{{ footer_text }}</p>
-        {% endif %}
-        {% if footer_email %}
+        {% endif %} {% if footer_email %}
         <p><a href="mailto:{{ footer_email }}">{{ footer_email }}</a></p>
-        {% endif %}
-        {% if theme_version %}
+        {% endif %} {% if theme_version %}
         <p>Version {{ theme_version }}</p>
         {% endif %}
       </footer>
