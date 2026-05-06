@@ -238,19 +238,21 @@ The theme also accepts the older `_data/AUTHORS.yml` shape with a top-level `aut
 
 ### Search
 
-The theme can render a search modal, but it does not generate `search.json` for you.
+The theme can render a search modal and generate `search.json` for you.
 
-If you enable search, your site must expose a JSON index at the configured URL. This gem does not generate `search.json` for you yet, so search index generation still has to live in the consumer repo.
+If you enable search, the theme writes a JSON index to `/search.json` by default. Set `build_theme.search.url` if your consumer site needs the modal to fetch a different endpoint.
 
 ### Math, Mermaid, And Plots
 
-The theme includes client-side support for:
+The theme includes client-side and plugin-side support for:
 
 - KaTeX auto-rendering
 - Mermaid diagrams
 - Observable Plot mounts used by the theme JS
+- Enhanced code fences with `:linenos`, `:highlight`, `:filename`, and `:filehref`
+- Citation decoration for unresolved `[^n]` references
 
-Those features do not require custom theme-side plugins.
+The Mermaid and Plot authoring workflow depends on the bundled code-fence plugin being active via `plugins: [build-theme]`.
 
 ## Local Theme Development
 
