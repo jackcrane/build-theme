@@ -1,176 +1,249 @@
-# Build@SLU OSS
+# build-theme
 
-Build@SLU OSS is a Jekyll site for publishing peer-reviewed technical writing, project writeups, and reference material.
+`build-theme` is a reusable Jekyll remote theme for publication-heavy sites, notes, essays, and documentation.
 
-The reusable theme now lives in the sibling `../build-theme` repository and is consumed here through Jekyll's `remote_theme` support.
+This repository is theme-only. It intentionally does not ship site content, collection data, or custom build plugins.
 
-## Requirements
+## What This Repo Contains
 
-- Ruby `3.2.2` (pinned in [.ruby-version](./.ruby-version))
-- Bundler matching `Gemfile.lock` (`4.0.9` at the time of writing)
+- Shared layouts in `_layouts/`
+- Shared Sass in `assets/css/`
+- Shared JavaScript in `assets/js/`
+- Shared theme icons in `assets/images/`
 
-If `bundle` is picking up the system Ruby instead of your version manager, check `ruby -v` first. This repo will not install cleanly against macOS's default Ruby `2.6`.
+## What Stays In The Consumer Site
 
-## Install
+- Posts, pages, collections, and any actual site content
+- Brand assets such as your logo, hero art, and author headshots
+- `_data/` files such as author metadata
+- Custom `_plugins/`
 
-1. Install Ruby `3.2.2` with your preferred version manager (`rbenv`, `asdf`, `mise`, etc.).
-2. Install Bundler for the version locked by the repo:
+That separation matters because Jekyll remote themes do not run custom plugins from the theme repository.
 
-   ```sh
-   gem install bundler -v 4.0.9
-   ```
+## Install It
 
-3. Install project dependencies:
+In your site’s `_config.yml`:
 
-   ```sh
-   bundle install
-   ```
+```yml
+title: My Site
+description: Essays, notes, and writeups.
+url: https://example.com
 
-If you change the remote theme dependency or want to clear cached theme output,
-run:
+remote_theme: jackcrane/build-theme
 
-```sh
-bundle exec jekyll clean
+plugins:
+  - jekyll-remote-theme
+  - jekyll-feed
+  - jekyll-toc
 ```
 
-## Run Locally
+In your site’s `Gemfile`:
 
-Start the local development server:
+```ruby
+gem "jekyll", "~> 4.4.1"
+
+group :jekyll_plugins do
+  gem "jekyll-feed", "~> 0.12"
+  gem "jekyll-remote-theme"
+  gem "jekyll-toc"
+end
+
+gem "webrick", "~> 1.9"
+```
+
+Then install and run:
 
 ```sh
+bundle install
 bundle exec jekyll serve --livereload
 ```
 
-Then open <http://127.0.0.1:4000>.
+If you want a pinned version instead of following `main`, use:
 
-Useful commands:
-
-- `bundle exec jekyll serve --livereload` runs the site locally and rebuilds on change.
-- `bundle exec jekyll build` creates a production build in `_site/`.
-- `bundle exec jekyll clean` clears the generated site and cached theme artifacts.
-
-Note: changes to [`_config.yml`](./_config.yml) require restarting the server.
-
-## Theme Split
-
-- This repository owns the content, collections, data files, deployment workflow, custom `_plugins/`, the homepage layout, and brand assets such as the banner and logos.
-- The sibling `../build-theme` repository owns the reusable shared layouts, Sass, JavaScript, and non-brand theme assets.
-
-The custom plugins stay here on purpose. Jekyll remote themes do not execute a
-theme repository's `_plugins`, so anything required at build time must remain
-in the site repository.
-
-## Project Structure
-
-- [`_articles/`](./_articles/) holds published articles.
-- [`_resources/`](./_resources/) holds reference pages and guides.
-- [`_layouts/home.html`](./_layouts/home.html) overrides the homepage locally.
-- [`assets/authors/`](./assets/authors/) holds site-owned author headshots.
-- [`assets/images/`](./assets/images/) holds site-owned brand assets such as the homepage banner and logos.
-- [`_plugins/`](./_plugins/) contains the custom Jekyll behavior for article permalinks, colocated assets, code fences, plots, and diagrams.
-
-Articles and resources both support colocated assets. If you put files next to an article's `index.md`, those files are published under the same public URL path.
-
-Example:
-
-```text
-_articles/my-article/index.md
-_articles/my-article/hero.png
-_articles/my-article/data.json
+```yml
+remote_theme: jackcrane/build-theme@v1.0.0
 ```
 
-Inside the article body:
+You can also pin to a branch or commit SHA.
+
+## Layouts
+
+This theme ships three content layouts plus a generic homepage layout:
+
+- `default`: shared shell, nav, footer, math, Mermaid, and JS hooks
+- `page`: standard page content
+- `post`: article/post layout with optional author card, TOC, and dither header
+- `home`: generic landing page with optional hero and latest-content list
+
+## Minimal Site Example
+
+`index.md`
 
 ```md
-![image](my_image.png)
+---
+layout: home
+title: Home
+hero_title: Practical writing for curious builders
+hero_text: Essays, reference material, and project notes.
+---
+
+Welcome to the site.
 ```
 
-## Creating A New Article
+`about.md`
 
-1. Create a new folder under [`_articles/`](./_articles/) for the article.
-2. Copy the template from [`_docs/article-template.md`](./_docs/article-template.md) into `index.md`.
-3. Fill in the front matter and write the article body.
-4. Add any images, CSV files, JSON files, or other static assets in the same folder.
-5. Preview the article locally with `bundle exec jekyll serve --livereload`.
+```md
+---
+layout: page
+title: About
+permalink: /about/
+---
+
+This site collects long-form writing and technical notes.
+```
+
+`_posts/2026-05-05-hello.md`
+
+```md
+---
+layout: post
+title: Hello
+date: 2026-05-05
+toc: true
+author: Jane Doe
+header_effect: dither
+---
+
+## First section
+
+This is a post.
+```
+
+## Theme Configuration
+
+Add these in your site `_config.yml` as needed:
+
+```yml
+title: My Site
+description: Essays, notes, and writeups.
+email: hello@example.com
+
+build_theme:
+  logo: /assets/images/logo.svg
+  logo_mobile: /assets/images/logo-mobile.svg
+  footer_text: Thoughtful writing about building things.
+  footer_email: hello@example.com
+  home_collection: posts
+  nav:
+    - title: About
+      url: /about/
+    - title: Notes
+      url: /notes/
+  search:
+    enabled: false
+    url: /search.json
+```
+
+### Supported Settings
+
+- `build_theme.logo`: optional header logo image
+- `build_theme.logo_mobile`: optional small-screen logo image
+- `build_theme.footer_text`: footer copy
+- `build_theme.footer_email`: footer email link
+- `build_theme.home_collection`: collection shown by the `home` layout, default `posts`
+- `build_theme.nav`: explicit nav items; if omitted, titled pages are auto-listed
+- `build_theme.search.enabled`: enables the search modal trigger and JS
+- `build_theme.search.url`: endpoint for the search index, default `/search.json`
+
+If no logo is configured, the theme falls back to the site title as text.
+
+## Home Layout Front Matter
+
+The `home` layout supports these page-level options:
+
+```yml
+---
+layout: home
+title: Home
+hero_title: Practical writing for curious builders
+hero_text: Essays, reference material, and project notes.
+hero_image: /assets/images/hero.jpg
+hero_cta_text: Read the latest
+hero_cta_url: /posts/
+home_collection: posts
+list_title: Latest Writing
+---
+```
+
+If `hero_image` is omitted, the homepage renders a text-first hero.
+
+## Author Metadata
+
+The `post` layout works without author data, but it can render a richer author card when your site defines `_data/authors.yml` like this:
+
+```yml
+- name: Jane Doe
+  year: Editor
+  image: /assets/authors/jane.jpg
+  social:
+    github: janedoe
+    x: janedoe
+    linkedin: jane-doe
+    email: jane@example.com
+    website: https://example.com
+```
+
+Then in a post:
+
+```yml
+author: Jane Doe
+```
+
+The theme also accepts the older `_data/AUTHORS.yml` shape with a top-level `authors:` key.
+
+## Optional Features
+
+### Table Of Contents
+
+`toc: true` on a `post` expects `jekyll-toc` to be enabled in the consuming site.
+
+### Search
+
+The theme can render a search modal, but it does not generate `search.json` for you.
+
+If you enable search, your site must expose a JSON index at the configured URL. Because remote themes cannot ship executable custom plugins, search index generation has to live in the consumer repo.
+
+### Math, Mermaid, And Plots
+
+The theme includes client-side support for:
+
+- KaTeX auto-rendering
+- Mermaid diagrams
+- Observable Plot mounts used by the theme JS
+
+Those features do not require custom theme-side plugins.
+
+## Local Theme Development
+
+This repo is not meant to be the content site. The normal workflow is:
+
+1. Edit this theme repo.
+2. Push your changes.
+3. In a separate Jekyll site, point `remote_theme` at this repo, branch, tag, or commit.
+4. Run `bundle exec jekyll clean && bundle exec jekyll serve --livereload` in the consumer site.
 
 Example:
 
-```sh
-mkdir -p _articles/my-new-article
-cp _docs/article-template.md _articles/my-new-article/index.md
+```yml
+remote_theme: jackcrane/build-theme@my-branch
 ```
 
-### Required And Common Front Matter
+## Publishing Notes
 
-At minimum, articles should include:
+- Public GitHub repos work best for `remote_theme`
+- If you use a private theme repo, your CI build needs credentials for the fetch
+- Theme `_config.yml` values are not merged into the consuming site, so document required settings in the consumer repo
 
-```yaml
----
-layout: post
-title: My Article Title
-date: 2026-04-11
-header_effect: letters
-author: Daniel Shown
-abstract: A short summary of the article.
----
-```
+## License
 
-Useful notes:
-
-- `layout: post` should be used for articles.
-- `title` is required and is used to generate the default public URL.
-- `date` controls the displayed publication date.
-- `author` should match a name in [`_data/AUTHORS.yml`](./_data/AUTHORS.yml).
-- Add a new entry to [`_data/AUTHORS.yml`](./_data/AUTHORS.yml) before using a brand new author name.
-- `abstract` is recommended for article summaries and listings.
-- `header_effect` defines the animated hero treatment.
-- `toc` does not need to be set manually for articles or resources because it is enabled by default in [`_config.yml`](./_config.yml).
-
-### Article URLs
-
-Articles default to `/posts/<title-slug>/`, generated from the article title.
-The folder name under `_articles/` is for organization; the title controls the default permalink.
-
-Example:
-
-- `title: Building a resilient grader` becomes `/posts/building-a-resilient-grader/`
-
-You can still override the URL manually:
-
-```yaml
----
-layout: post
-title: My Article Title
-date: 2026-04-11
-permalink: /posts/custom-url/
----
-```
-
-## Writing Rich Content
-
-The best reference for authoring is the writing guide:
-
-- Source: [`_resources/writing-guide/index.md`](./_resources/writing-guide/index.md)
-- Local URL: `/resources/writing-guide/`
-
-That guide covers the richer features available in articles, including:
-
-- Footnote-style citations using `[^1]` references with definitions at the end
-- Mermaid diagrams in fenced `mermaid` blocks
-- LaTeX-style math in inline and display form
-- Enhanced code blocks with line numbers, highlighted lines, filenames, and file links
-- Observable Plot charts with colocated CSV or JSON data sources
-
-## Publishing
-
-This site is deployed by GitHub Actions from [`.github/workflows/pages.yml`](./.github/workflows/pages.yml).
-
-When a theme change is involved, publish in this order:
-
-1. Push the `build-theme` repository changes first.
-2. If you want a reproducible theme version, pin `remote_theme` in [`_config.yml`](./_config.yml) to a branch, tag, or commit such as `oss-slu/build-theme@v1.0.0`.
-3. Run `bundle exec jekyll build` in this repository to verify the site against the published theme.
-4. Push this repository so the Pages workflow rebuilds and deploys the site.
-
-If the theme repository is private, the CI build will need credentials for
-remote theme fetches; public GitHub repositories work without extra setup.
+MIT, same as [`LICENSE`](./LICENSE).

@@ -2,10 +2,10 @@
 layout: default
 ---
 
-{% assign header_effect = page.header_effect | downcase %} {% assign authors =
-site.data.AUTHORS.authors | default: empty %} {% assign author = authors |
-where: "name", page.author | first %} {% assign rendered_content = content |
-decorate_citations %}
+{% assign header_effect = page.header_effect | downcase %}
+{% assign authors = site.data.authors | default: site.data.AUTHORS.authors | default: empty %}
+{% assign author = authors | where: "name", page.author | first %}
+{% assign rendered_content = content %}
 <article class="page-content">
   {% if header_effect == 'dither' %}
   <header
@@ -22,7 +22,9 @@ decorate_citations %}
     <div class="post-hero__inner">
       <h1 class="post-title post-title__label">{{ page.title }}</h1>
       <div class="post-meta">
+        {% if page.date %}
         <p class="meta post-meta__date">{{ page.date | date: "%Y-%m-%d" }}</p>
+        {% endif %}
         {% if author %}
         <div class="author-profile">
           <button
@@ -30,19 +32,23 @@ decorate_citations %}
             class="author-profile__summary"
             aria-label="Author details for {{ author.name }}"
           >
+            {% if author.image %}
             <img
               class="author-profile__image"
               src="{{ author.image | relative_url }}"
               alt="{{ author.name }}"
             />
+            {% endif %}
             <span class="author-profile__name">{{ author.name }}</span>
           </button>
           <div class="author-profile__card">
+            {% if author.image %}
             <img
               class="author-profile__card-image"
               src="{{ author.image | relative_url }}"
               alt="{{ author.name }}"
             />
+            {% endif %}
             <div class="author-profile__card-copy">
               <p class="author-profile__card-name">{{ author.name }}</p>
               {% if author.year %}
@@ -64,7 +70,8 @@ decorate_citations %}
                     alt="GitHub"
                   />
                 </a>
-                {% endif %} {% if author.social.x %}
+                {% endif %}
+                {% if author.social.x %}
                 <a
                   href="https://x.com/{{ author.social.x | remove: '@' }}"
                   target="_blank"
@@ -73,7 +80,8 @@ decorate_citations %}
                 >
                   <img src="https://cdn.simpleicons.org/x/111111" alt="X" />
                 </a>
-                {% endif %} {% if author.social.linkedin %}
+                {% endif %}
+                {% if author.social.linkedin %}
                 <a
                   href="https://www.linkedin.com/in/{{ author.social.linkedin }}"
                   target="_blank"
@@ -85,7 +93,8 @@ decorate_citations %}
                     alt="LinkedIn"
                   />
                 </a>
-                {% endif %} {% if author.social.email %}
+                {% endif %}
+                {% if author.social.email %}
                 <a
                   href="mailto:{{ author.social.email }}"
                   aria-label="Email {{ author.name }}"
@@ -95,7 +104,8 @@ decorate_citations %}
                     alt="Email"
                   />
                 </a>
-                {% endif %} {% if author.social.website %}
+                {% endif %}
+                {% if author.social.website %}
                 <a
                   href="{{ author.social.website }}"
                   target="_blank"
@@ -112,6 +122,8 @@ decorate_citations %}
             </div>
           </div>
         </div>
+        {% elsif page.author %}
+        <p class="meta post-meta__author">{{ page.author }}</p>
         {% endif %}
       </div>
     </div>
@@ -120,7 +132,9 @@ decorate_citations %}
   {% else %}
   <h1 class="post-title">{{ page.title }}</h1>
   <div class="post-meta">
+    {% if page.date %}
     <p class="meta post-meta__date">{{ page.date | date: "%Y-%m-%d" }}</p>
+    {% endif %}
     {% if author %}
     <div class="author-profile">
       <button
@@ -128,19 +142,23 @@ decorate_citations %}
         class="author-profile__summary"
         aria-label="Author details for {{ author.name }}"
       >
+        {% if author.image %}
         <img
           class="author-profile__image"
           src="{{ author.image | relative_url }}"
           alt="{{ author.name }}"
         />
+        {% endif %}
         <span class="author-profile__name">{{ author.name }}</span>
       </button>
       <div class="author-profile__card">
+        {% if author.image %}
         <img
           class="author-profile__card-image"
           src="{{ author.image | relative_url }}"
           alt="{{ author.name }}"
         />
+        {% endif %}
         <div class="author-profile__card-copy">
           <p class="author-profile__card-name">{{ author.name }}</p>
           {% if author.year %}
@@ -159,7 +177,8 @@ decorate_citations %}
                 alt="GitHub"
               />
             </a>
-            {% endif %} {% if author.social.x %}
+            {% endif %}
+            {% if author.social.x %}
             <a
               href="https://x.com/{{ author.social.x | remove: '@' }}"
               target="_blank"
@@ -168,7 +187,8 @@ decorate_citations %}
             >
               <img src="https://cdn.simpleicons.org/x/111111" alt="X" />
             </a>
-            {% endif %} {% if author.social.linkedin %}
+            {% endif %}
+            {% if author.social.linkedin %}
             <a
               href="https://www.linkedin.com/in/{{ author.social.linkedin }}"
               target="_blank"
@@ -180,7 +200,8 @@ decorate_citations %}
                 alt="LinkedIn"
               />
             </a>
-            {% endif %} {% if author.social.email %}
+            {% endif %}
+            {% if author.social.email %}
             <a
               href="mailto:{{ author.social.email }}"
               aria-label="Email {{ author.name }}"
@@ -190,7 +211,8 @@ decorate_citations %}
                 alt="Email"
               />
             </a>
-            {% endif %} {% if author.social.website %}
+            {% endif %}
+            {% if author.social.website %}
             <a
               href="{{ author.social.website }}"
               target="_blank"
@@ -207,6 +229,8 @@ decorate_citations %}
         </div>
       </div>
     </div>
+    {% elsif page.author %}
+    <p class="meta post-meta__author">{{ page.author }}</p>
     {% endif %}
   </div>
   {% endif %}
@@ -223,7 +247,9 @@ decorate_citations %}
           {{ rendered_content | toc_only }}
         </nav>
       </div>
-      {{ rendered_content | inject_anchors }} {% else %} {{ rendered_content }}
+      {{ rendered_content | inject_anchors }}
+      {% else %}
+      {{ rendered_content }}
       {% endif %}
     </div>
   </div>

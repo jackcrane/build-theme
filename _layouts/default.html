@@ -28,34 +28,41 @@
     />
   </head>
   <body class="layout-{{ page.layout | default: 'default' }}">
+    {% assign theme = site.build_theme | default: empty %}
+    {% assign logo = theme.logo | default: site.logo %}
+    {% assign logo_mobile = theme.logo_mobile | default: logo %}
+    {% assign footer_text = theme.footer_text | default: site.description %}
+    {% assign footer_email = theme.footer_email | default: site.email %}
+    {% assign nav_items = theme.nav | default: site.nav %}
+    {% assign search_settings = theme.search | default: empty %}
+    {% assign search_enabled = search_settings.enabled | default: false %}
+    {% assign search_url = search_settings.url | default: '/search.json' %}
     <div class="site-shell">
       <header class="site-header">
         <div class="header-content">
           <div class="site-title">
-            <a href="{{ '/' | relative_url }}">
+            <a href="{{ '/' | relative_url }}" class="site-title__link">
+              {% if logo %}
               <img
-                src="{{ '/assets/images/logo-h.svg' | relative_url }}"
-                alt="Logo"
+                src="{{ logo | relative_url }}"
+                alt="{{ site.title }}"
                 class="site-logo"
               />
+              {% endif %}
+              {% if logo_mobile %}
               <img
-                src="{{ '/assets/images/logo-h.png' | relative_url }}"
-                alt="Logo"
-                class="site-logo site-logo-print"
-              />
-              <img
-                src="{{ '/assets/images/logo-v.svg' | relative_url }}"
-                alt="Logo"
+                src="{{ logo_mobile | relative_url }}"
+                alt="{{ site.title }}"
                 class="site-logo-sm"
               />
-              <img
-                src="{{ '/assets/images/logo-v.png' | relative_url }}"
-                alt="Logo"
-                class="site-logo-sm site-logo-sm-print"
-              />
+              {% endif %}
+              {% unless logo or logo_mobile %}
+              <span class="site-title__text">{{ site.title }}</span>
+              {% endunless %}
             </a>
           </div>
           <div class="site-header__actions">
+            {% if search_enabled %}
             <button
               class="site-search-trigger"
               type="button"
@@ -65,23 +72,29 @@
             >
               Search...
             </button>
+            {% endif %}
             <nav class="site-nav" aria-label="Primary">
               <a href="{{ '/' | relative_url }}">Home</a>
-              {% assign nav_pages = site.pages | sort: "title" %} {% for
-              nav_page in nav_pages %} {% if nav_page.title and nav_page.url !=
-              "/" and nav_page.nav != false %}
-              <a
-                href="{% if nav_page.title == 'About' %}{{ '/resources/what-is-build-slu-oss/' | relative_url }}{% else %}{{ nav_page.url | relative_url }}{% endif %}"
-                >{{ nav_page.title }}</a
-              >
-              {% endif %} {% endfor %}
+              {% if nav_items and nav_items.size > 0 %}
+                {% for item in nav_items %}
+              <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                {% endfor %}
+              {% else %}
+                {% assign nav_pages = site.pages | sort: "title" %}
+                {% for nav_page in nav_pages %}
+                  {% if nav_page.title and nav_page.url != "/" and nav_page.nav != false %}
+              <a href="{{ nav_page.url | relative_url }}">{{ nav_page.title }}</a>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
             </nav>
           </div>
         </div>
+        {% if search_enabled %}
         <div
           class="site-search"
           data-site-search
-          data-search-url="{{ '/search.json' | relative_url }}"
+          data-search-url="{{ search_url | relative_url }}"
           data-base-url="{{ site.baseurl }}"
           data-search-open="false"
         >
@@ -118,24 +131,28 @@
             ></div>
           </div>
         </div>
+        {% endif %}
       </header>
 
       <main class="site-main">{{ content }}</main>
 
       <footer class="site-footer">
-        <p>
-          Peer-reviewed white papers about technical adventures, sideprojects,
-          deep dives, and more.
-        </p>
-        <p><a href="mailto:oss@slu.edu">oss@slu.edu</a></p>
+        {% if footer_text %}
+        <p>{{ footer_text }}</p>
+        {% endif %}
+        {% if footer_email %}
+        <p><a href="mailto:{{ footer_email }}">{{ footer_email }}</a></p>
+        {% endif %}
       </footer>
     </div>
     <script src="{{ '/assets/js/code-copy.js' | relative_url }}"></script>
+    {% if search_enabled %}
     <script
       defer
       src="https://unpkg.com/lunr@2.3.9/lunr.min.js"
       crossorigin="anonymous"
     ></script>
+    {% endif %}
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
@@ -170,7 +187,9 @@
       type="module"
       src="{{ '/assets/js/plot-render.js' | relative_url }}"
     ></script>
+    {% if search_enabled %}
     <script defer src="{{ '/assets/js/search.js' | relative_url }}"></script>
+    {% endif %}
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
 
