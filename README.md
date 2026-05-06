@@ -179,7 +179,7 @@ list_title: Latest Writing
 ```
 
 If `hero_image` is omitted, the homepage renders a text-first hero.
-If `hero_image` is set to `dither` or `letters`, the homepage renders that built-in pattern instead of loading an image path.
+If `hero_image` is set to `dither`, the homepage renders that built-in pattern instead of loading an image path.
 
 ## Author Metadata
 

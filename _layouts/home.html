@@ -11,17 +11,14 @@ layout: default
 {% assign hero_image = page.hero_image %}
 {% assign hero_image_key = hero_image | downcase %}
 {% assign hero_is_dither = false %}
-{% assign hero_is_letters = false %}
 {% if hero_image_key == 'dither' %}
   {% assign hero_is_dither = true %}
-{% elsif hero_image_key == 'letters' %}
-  {% assign hero_is_letters = true %}
 {% endif %}
 {% assign list_title = page.list_title | default: 'Latest Writing' %}
 
 <div class="container">
   <section
-    class="hero{% if hero_is_dither %} hero--dither{% elsif hero_is_letters %} hero--letters{% elsif hero_image %} hero--image{% else %} hero--plain{% endif %}"
+    class="hero{% if hero_is_dither %} hero--dither{% elsif hero_image %} hero--image{% else %} hero--plain{% endif %}"
     {% if hero_is_dither %}
     data-dither-header
     data-wave-color="0.5,0.5,0.5"
@@ -34,8 +31,6 @@ layout: default
   >
     {% if hero_is_dither %}
     <canvas class="post-title__canvas hero-pattern__canvas" aria-hidden="true"></canvas>
-    {% elsif hero_is_letters %}
-    <div class="hero-pattern hero-pattern--letters" aria-hidden="true"></div>
     {% elsif hero_image %}
     <img
       src="{{ hero_image | relative_url }}"
