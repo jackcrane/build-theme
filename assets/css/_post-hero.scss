@@ -1,0 +1,44 @@
+.post-hero--dither {
+  position: relative;
+  z-index: 2;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-top: clamp(4rem, 10vw, 7rem);
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border-bottom: 1.5px solid #eee;
+  overflow: visible;
+}
+
+.post-hero__inner {
+  position: relative;
+  z-index: 3;
+  width: min(44rem, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.post-title__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.post-title__label {
+  position: relative;
+  font-size: 4rem;
+}
+
+@media print {
+  .post-title__label {
+    font-size: 2.5rem;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .post-hero__inner {
+    width: min(50rem, calc(100% - 2rem));
+  }
+}
