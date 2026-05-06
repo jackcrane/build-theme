@@ -249,10 +249,12 @@ The theme includes client-side and plugin-side support for:
 - KaTeX auto-rendering
 - Mermaid diagrams
 - Observable Plot mounts used by the theme JS
-- Enhanced code fences with `:linenos`, `:highlight`, `:filename`, and `:filehref`
+- Enhanced code fences with `:linenos`, `:linenosoverrides`, `:highlight`, `:filename`, and `:filehref`
 - Citation decoration for unresolved `[^n]` references
 
 The Mermaid and Plot authoring workflow depends on the bundled code-fence plugin being active via `plugins: [build-theme]`.
+
+When you need non-sequential gutter labels, use `:linenosoverrides=0000,0010,0020`. Provide one label per rendered line; otherwise the theme falls back to the normal sequential gutter.
 
 ## Local Theme Development
 

@@ -3,6 +3,7 @@
 require "cgi"
 require "json"
 require "jekyll"
+require "nokogiri"
 require "rouge"
 require "strscan"
 
@@ -102,7 +103,13 @@ module BuildTheme
       until scanner.eos?
         scanner.skip(/\s+/)
 
-        if (linenos_value = scanner.scan(/:linenos(?:=(\d+))?/))
+        if scanner.scan(/:linenosoverrides?=/)
+          labels = parse_line_number_overrides(parse_option_value(scanner))
+          next if labels.empty?
+
+          options[:linenos] = true
+          options[:line_number_overrides] = labels
+        elsif (linenos_value = scanner.scan(/:linenos(?:=(\d+))?(?=\s|$)/))
           options[:linenos] = true
           if (match = linenos_value.match(/=(\d+)/))
             options[:start_line] = match[1].to_i
@@ -135,6 +142,7 @@ module BuildTheme
     def self.render_highlighted_html(lang, code, options)
       code = code.gsub(STRIP_LINE_TERMINATORS, "")
       code = code.gsub(ESCAPED_TRIPLE_BACKTICKS, "```")
+      line_count = line_count_for(code)
       lexer = Rouge::Lexer.find_fancy(lang, code) || Rouge::Lexers::PlainText
       figure_inner = +""
       header_html = metadata_header_html(lang, options)
@@ -153,6 +161,7 @@ module BuildTheme
 
         table_html = formatter.format(lexer.lex(code))
         table_html.sub!(%r{\n</pre></td>\s*</tr></tbody></table>\z}, "</pre></td></tr></tbody></table>")
+        table_html = apply_line_number_overrides(table_html, options, line_count)
 
         figure_inner << copy_button_html unless options[:filename]
         figure_inner << %(<div class="highlight__body">#{table_html}</div>)
@@ -209,6 +218,10 @@ module BuildTheme
       end
 
       sources
+    end
+
+    def self.parse_line_number_overrides(value)
+      value.to_s.split(",").map(&:strip).reject(&:empty?)
     end
 
     def self.next_plot_block_id
@@ -323,6 +336,33 @@ module BuildTheme
         relative = line - start_line(options) + 1
         relative if relative.positive?
       end
+    end
+
+    def self.line_count_for(code)
+      return 1 if code.empty?
+
+      code.count("\n") + 1
+    end
+
+    def self.apply_line_number_overrides(table_html, options, line_count)
+      labels = options[:line_number_overrides]
+      return table_html unless labels
+
+      if labels.length != line_count
+        Jekyll.logger.warn(
+          "CodeFenceOptions:",
+          "Ignoring :linenosoverrides because it provided #{labels.length} labels for #{line_count} lines"
+        )
+        return table_html
+      end
+
+      fragment = Nokogiri::HTML::DocumentFragment.parse(table_html)
+      gutter = fragment.at_css("td.rouge-gutter pre.lineno")
+      return table_html unless gutter
+
+      gutter.children.remove
+      gutter.add_child("#{labels.map { |label| CGI.escapeHTML(label) }.join("\n")}\n")
+      fragment.to_html
     end
   end
 end
