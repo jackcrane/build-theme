@@ -217,6 +217,41 @@
   padding: 0.25rem 0;
 }
 
+.post-content .admonition {
+  margin: 10px calc(-1rem - 1.5px);
+  padding: 0.5rem 1rem;
+  border: 1.5px solid hsl(var(--admonition-hue) 80% 50%);
+  background-color: hsl(var(--admonition-hue) 80% 98%);
+}
+
+.post-content .admonition > :first-child {
+  margin-top: 0;
+}
+
+.post-content .admonition > :last-child {
+  margin-bottom: 0;
+}
+
+.post-content .admonition--note {
+  --admonition-hue: 200deg;
+}
+
+.post-content .admonition--tip {
+  --admonition-hue: 145deg;
+}
+
+.post-content .admonition--important {
+  --admonition-hue: 268deg;
+}
+
+.post-content .admonition--warning {
+  --admonition-hue: 32deg;
+}
+
+.post-content .admonition--caution {
+  --admonition-hue: 4deg;
+}
+
 .post-content table:not(.rouge-table) {
   width: calc(100% + 2rem);
   margin-left: -1rem;
