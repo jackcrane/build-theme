@@ -33,6 +33,12 @@
   background: #111;
 }
 
+@media screen and (max-width: 600px) {
+  .hero {
+    height: 350px;
+  }
+}
+
 .hero-content {
   z-index: 2;
   padding: 1rem;
