@@ -26,6 +26,21 @@
       title="{{ site.title | escape }}"
       href="{{ '/feed.xml' | relative_url }}"
     />
+    {% assign analytics = site.build_theme.google_analytics | default:
+    site.google_analytics %} {% if analytics %}
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id={{ analytics | escape }}"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "{{ analytics | escape }}");
+    </script>
+    {% endif %}
   </head>
   <body class="layout-{{ page.layout | default: 'default' }}">
     {% assign theme = site.build_theme | default: empty %} {% assign logo =

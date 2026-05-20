@@ -160,6 +160,7 @@ build_theme:
   logo_mobile: /assets/images/logo-mobile.svg
   footer_text: Thoughtful writing about building things.
   footer_email: hello@example.com
+  google_analytics: G-XXXXXXXXXX
   home_collection: posts
   nav:
     - title: About
@@ -177,6 +178,7 @@ build_theme:
 - `build_theme.logo_mobile`: optional small-screen logo image
 - `build_theme.footer_text`: footer copy
 - `build_theme.footer_email`: footer email link
+- `build_theme.google_analytics`: optional Google Analytics 4 measurement ID; also supports the top-level `google_analytics` key
 - `build_theme.home_collection`: collection shown by the `home` layout, default `posts`
 - `build_theme.permalink_from_title_collections`: collections that should default to `/<prefix>/<title-slug>/`; defaults to `articles` and `resources`
 - `build_theme.colocated_asset_collections`: collections whose non-Markdown files should be published beside the document URL; defaults to `articles` and `resources`
