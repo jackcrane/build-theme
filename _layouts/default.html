@@ -41,6 +41,7 @@
       gtag("config", "{{ analytics | escape }}");
     </script>
     {% endif %}
+    {% include custom-head.html %}
   </head>
   <body class="layout-{{ page.layout | default: 'default' }}">
     {% assign theme = site.build_theme | default: empty %} {% assign logo =

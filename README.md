@@ -189,6 +189,10 @@ build_theme:
 
 If no logo is configured, the theme falls back to the site title as text.
 
+## Custom `<head>` Code
+
+Every page includes `_includes/custom-head.html` at the end of `<head>`. The theme ships it empty; to add tracking scripts, verification tags, extra fonts, etc., create `_includes/custom-head.html` in your site. Jekyll prefers the site's copy over the theme's.
+
 ## Home Layout Front Matter
 
 The `home` layout supports these page-level options:
