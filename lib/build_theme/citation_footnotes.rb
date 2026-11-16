@@ -24,6 +24,8 @@ module BuildTheme
         text_node.replace(Nokogiri::HTML::DocumentFragment.parse(replacement_html))
       end
 
+      move_backlinks_to_first_paragraph(fragment)
+
       fragment.to_html
     rescue StandardError => error
       Jekyll.logger.warn("CitationFootnotes:", "Falling back to unmodified content: #{error.message}")
@@ -31,6 +33,26 @@ module BuildTheme
     end
 
     private
+
+    # Multi-block footnotes (e.g. a paragraph followed by a code block) get
+    # their backlink in a trailing paragraph of its own. Move it up next to
+    # the first paragraph's text instead.
+    def move_backlinks_to_first_paragraph(fragment)
+      fragment.css(".#{FOOTNOTES_CLASS} li").each do |item|
+        last = item.element_children.last
+        next unless last&.name == "p"
+
+        backlink = last.at_css("a.reversefootnote")
+        next unless backlink && last.text.delete("\u00a0 \n").strip == backlink.text.strip
+
+        first = item.element_children.first
+        next unless first && first != last && first.name == "p"
+
+        first.add_child(Nokogiri::XML::Text.new("\u00a0", fragment.document))
+        first.add_child(backlink)
+        last.remove
+      end
+    end
 
     def skip_text_node?(text_node)
       text_node.ancestors.any? do |ancestor|

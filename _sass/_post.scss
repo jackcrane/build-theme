@@ -392,6 +392,15 @@
   white-space: nowrap;
 }
 
+.post-content .footnotes ol {
+  padding-left: 1rem;
+}
+
+.post-content .footnotes ol .highlight {
+  margin-left: -2rem;
+  padding-left: 1.5rem;
+}
+
 .post-content .footnotes p:last-child {
   margin-bottom: 0;
 }
