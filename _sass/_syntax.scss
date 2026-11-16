@@ -10,7 +10,8 @@ figure.highlight {
   margin-right: -1rem;
 }
 
-.highlight__body {
+.highlight__body,
+div.highlight > pre {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -172,6 +173,11 @@ figure.highlight {
   padding: 0.85rem 0.9rem;
   background: transparent;
   min-width: max-content;
+}
+
+/* Plain fences have no .highlight__body wrapper, so the pre itself must scroll */
+.highlight > pre {
+  min-width: 0;
 }
 
 .highlight code,
