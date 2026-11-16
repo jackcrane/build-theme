@@ -262,6 +262,33 @@ The Mermaid and Plot authoring workflow depends on the bundled code-fence plugin
 
 When you need non-sequential gutter labels, use `:linenosoverrides=0000,0010,0020`. Provide one label per rendered line; otherwise the theme falls back to the normal sequential gutter.
 
+### Table Directives
+
+Tables support two nonstandard directives. Put them after the final pipe of a row.
+
+`:expandafter` hides the rows below it behind a "View more" row. Clicking it reveals rows up to the next `:expandafter`. Use `:expandafter="Label"` for custom text. You can use it multiple times.
+
+```markdown
+| Name | Value |
+| --- | --- |
+| 1 | a |
+| 2 | b |:expandafter
+| 3 | c |
+| 4 | d |:expandafter="Even more!"
+| 5 | e |
+```
+
+On the header row, `:expandafter=n` adds a "View more" row after every `n` body rows (default 10 for a bare `:expandafter`). Your own `:expandafter` rows still apply.
+
+`:paginate=n` on the header row shows `n` rows per page (default 10) with a pagination bar under the table. Long page lists are truncated with `…`. `:expandafter` on body rows is ignored in paginated tables.
+
+```markdown
+| Name | Value |:paginate=5
+| --- | --- |
+```
+
+Both need JavaScript to reveal hidden rows.
+
 ## Local Theme Development
 
 This repo is not meant to be the content site. The normal workflow is:

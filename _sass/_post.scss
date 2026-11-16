@@ -297,13 +297,40 @@
 }
 
 .post-content table:not(.rouge-table) tr.table-expand,
-.post-content table:not(.rouge-table) tr.table-expand td {
+.post-content table:not(.rouge-table) tr.table-expand td,
+.post-content table:not(.rouge-table) tr.table-pagination,
+.post-content table:not(.rouge-table) tr.table-pagination td {
   background: none;
 }
 
-.post-content table .table-expand td {
+.post-content table:not(.rouge-table) tr.table-expand td,
+.post-content table:not(.rouge-table) tr.table-pagination td {
   text-align: center;
   border-top: 4px double #e5e7eb;
+}
+
+.post-content table .table-pagination__button {
+  margin: 0 0.15rem;
+  padding: 0.1rem 0.6rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 0.3rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.post-content table .table-pagination__gap {
+  margin: 0 0.15rem;
+}
+
+.post-content table .table-pagination__button:hover {
+  background: #f1f5f9;
+}
+
+.post-content table .table-pagination__button[aria-current] {
+  background: #e5e7eb;
+  cursor: default;
 }
 
 .post-content table .table-expand__button {
