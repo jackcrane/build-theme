@@ -254,28 +254,27 @@
 
 .post-content table:not(.rouge-table) {
   width: calc(100% + 2rem);
-  margin-left: -1rem;
-  margin-right: -1rem;
-  margin-bottom: 1.5rem;
+  margin: 0 -1rem 1.5rem;
   border-collapse: collapse;
-  overflow-x: auto;
-  display: block;
+  border-top: 1.5px solid #e5e7eb;
+  border-bottom: 1.5px solid #e5e7eb;
 }
 
 .post-content table:not(.rouge-table) th,
 .post-content table:not(.rouge-table) td {
-  padding: 0.65rem 1rem;
-  border: 1.5px solid #eee;
+  padding: 0.4rem 1rem;
+  border: 1.5px solid #e5e7eb;
   text-align: left;
   vertical-align: top;
 }
 
 .post-content table:not(.rouge-table) th {
-  background-color: #f1f5f9;
+  font-weight: normal;
+  border-bottom: 4px double #e5e7eb;
 }
 
 .post-content table:not(.rouge-table) tr:nth-child(2n) {
-  background-color: #f8fafc;
+  background: #f8fafc;
 }
 
 .post-content table:not(.rouge-table) td:first-of-type,
@@ -288,8 +287,33 @@
   border-right: none;
 }
 
-.post-content table:not(.rouge-table) th {
-  font-weight: 600;
+.post-content table:not(.rouge-table) tr:first-child th,
+.post-content table:not(.rouge-table) tr:first-child td {
+  border-top: none;
+}
+
+.post-content table:not(.rouge-table) tr:last-child td {
+  border-bottom: none;
+}
+
+.post-content table:not(.rouge-table) tr.table-expand,
+.post-content table:not(.rouge-table) tr.table-expand td {
+  background: none;
+}
+
+.post-content table .table-expand td {
+  text-align: center;
+  border-top: 4px double #e5e7eb;
+}
+
+.post-content table .table-expand__button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .post-content .katex-display::-webkit-scrollbar {
